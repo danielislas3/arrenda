@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LoginView from '../views/LoginView.vue'
-
+import Contacts from '../modules/contacts/pages/Contacts.vue'
+import ContactDetail from '../modules/contacts/pages/ContactDetail.vue'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -10,17 +11,22 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'login',
       component: LoginView
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
+      path: '/contacts',
+      name: 'contacts',
+      component: Contacts,
+
+    },
+    {
+      path: '/contact/:contactId',
+      name: 'contacts-parent',
+      props: true,
+      component: ContactDetail,
+      // children: [{ path: '', name: 'contact', component: ContactDetail }],
+    },
   ]
 })
 

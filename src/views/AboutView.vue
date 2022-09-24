@@ -4,6 +4,11 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'Login'
+}
+</script>
 <style>
 @media (min-width: 1024px) {
   .about {
