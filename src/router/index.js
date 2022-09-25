@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LoginView from '../views/LoginView.vue'
-import Contacts from '../modules/contacts/pages/Contacts.vue'
+import ContactsList from '../modules/contacts/pages/ContactsList.vue'
+import ContactsTemplate from '../modules/contacts/pages/ContactsTemplate.vue'
 import ContactDetail from '../modules/contacts/pages/ContactDetail.vue'
+import EditContact from '../modules/contacts/pages/EditContact.vue'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -17,16 +19,30 @@ const router = new VueRouter({
     {
       path: '/contacts',
       name: 'contacts',
-      component: Contacts,
+      component: ContactsTemplate,
+      children: [
+        { path: '/', component: ContactsList },
+        {
+          path: ':contactId',
+          name: 'contact-id',
+          component: ContactDetail,
+          props: true
+        },
+        {
+          path: ':contactId/edit',
+          name: 'contact-edit',
+          component: EditContact,
+          props: true
+        },
 
+      ]
     },
-    {
-      path: '/contact/:contactId',
-      name: 'contacts-parent',
-      props: true,
-      component: ContactDetail,
-      // children: [{ path: '', name: 'contact', component: ContactDetail }],
-    },
+    // {
+    //   path: '/contacts/:contactId',
+    //   name: 'contacts-parent',
+    //   props: true,
+    //   component: ContactDetail,
+    // },
   ]
 })
 

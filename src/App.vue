@@ -3,17 +3,20 @@
 </script>
 
 <template>
-  <div id="app">
+  <v-app>
 
-    <div class="container mx-auto">
+    <div id="app">
 
-      <!-- <nav>
-        <router-link to="/">Home</router-link>
-        <router-link to="/about">About</router-link>
-      </nav> -->
+      <div class=" mx-auto">
+
+        <!-- <nav>
+          <router-link to="/">Home</router-link>
+          <router-link to="/about">About</router-link>
+        </nav> -->
+      </div>
+
+
+      <router-view />
     </div>
-
-
-    <router-view />
-  </div>
+  </v-app>
 </template>

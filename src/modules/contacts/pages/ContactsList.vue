@@ -7,7 +7,7 @@
     <main>
       <ul class="py-8 ">
         <li v-for="contact in orderAlphabetically(contacts)" :key="contact.id">
-          <router-link :to="'/contact/' + contact.id" class="flex py-4 ">
+          <router-link :to="'/contacts/' + contact.id" class="flex py-4 ">
             <img class="mx-4" :src=" contact.img" alt="profile">
 
             <div>
@@ -22,13 +22,15 @@
         </li>
       </ul>
     </main>
+
+
   </div>
 </template>
 
 <script>
 import { userServices } from '@/services/Api.js'
 export default {
-  name: 'Contacts',
+  name: 'ContactsList',
   data() {
     return {
       contacts: []
