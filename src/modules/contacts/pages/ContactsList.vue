@@ -1,13 +1,11 @@
 <template>
   <div>
-    <nav class="bg-primary text-3xl font-bold py-6 px-4 text-violet-50">
-      <p>Contacts List</p>
-    </nav>
+
 
     <main>
       <ul class="py-8 ">
         <li v-for="contact in orderAlphabetically(contacts)" :key="contact.id">
-          <router-link :to="'/contacts/' + contact.id" class="flex py-4 ">
+          <router-link :to="{path: `/contacts/${contact.id}`}" class="flex py-4 ">
             <img class="mx-4" :src=" contact.img" alt="profile">
 
             <div>
@@ -29,35 +27,33 @@
 
 <script>
 import { userServices } from '@/services/Api.js'
+
 export default {
-  name: 'ContactsList',
+  name: "ContactsList",
   data() {
     return {
       contacts: []
-    }
+    };
   },
-
-
   methods: {
     //TODO: Arreglar la carga en cache
     async getContatcs() {
       try {
-        const data = await userServices.getContacts()
-        this.contacts = data
-      } catch (error) {
-        console.log(error)
+        const data = await userServices.getContacts();
+        this.contacts = data;
       }
-
+      catch (error) {
+        console.log(error);
+      }
     },
     orderAlphabetically() {
-      return [...this.contacts].sort((a, b) => (a.name > b.name) ? 1 : -1)
+      return [...this.contacts].sort((a, b) => (a.name > b.name) ? 1 : -1);
     }
   },
   async mounted() {
-    console.log('mounted');
-    await this.getContatcs()
+    console.log("mounted");
+    await this.getContatcs();
   },
-
 }
 </script>
 

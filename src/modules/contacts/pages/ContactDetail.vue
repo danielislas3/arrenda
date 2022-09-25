@@ -1,12 +1,10 @@
 <template>
   <div class="">
-    <nav class="bg-primary text-3xl font-bold py-6 px-4 text-violet-50 max-w-lg mx-auto ">
-      <p>Contacts List</p>
-    </nav>
+
 
 
     <template>
-      <v-card max-width="512" class="mx-auto">
+      <div>
         <!-- <v-img :src="contact.img" dark>
           <v-row class="fill-height">
             <v-card-title>
@@ -43,7 +41,10 @@
           </p>
           <v-divider class="my-3"></v-divider>
           <v-btn depressed rounded text>
-            <router-link :to="'/contacts/' + contact.id+'/edit'" class="flex py-4 ">
+            <router-link :to="{ 
+            path: `/contacts/${contact.id}/edit`,
+
+            }" class="flex py-4 ">
               Edit Account
             </router-link>
           </v-btn>
@@ -62,7 +63,7 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>- {{ contact.phone }}</v-list-item-title>
+              <v-list-item-title>+ {{ contact.phone }}</v-list-item-title>
               <v-list-item-subtitle>Mobile</v-list-item-subtitle>
             </v-list-item-content>
 
@@ -100,13 +101,13 @@
 
             <v-list-item-content>
 
-              <v-list-item-subtitle v-for="address in contact.addressLines">
+              <v-list-item-subtitle v-for="address in contact.addressLines" :key="address">
                 {{ address }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
-      </v-card>
+      </div>
 
 
     </template>

@@ -30,6 +30,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@contacts': fileURLToPath(new URL('./src/modules/contacts/', import.meta.url)),
       'src/': fileURLToPath(new URL('./src', import.meta.url)),
     }
 
