@@ -1,0 +1,34 @@
+org: danielislas3
+app: aws-node-express-dynamodb-api
+service: arrenda-backend
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-west-2
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-west-2:907457643171:table/contactTable
+        - arn:aws:dynamodb:us-west-2:907457643171:table/userTable
+functions:
+  hello:
+    handler: src/handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+  createContact:
+    handler: src/functions/contacts.addContact
+    events:
+      - httpApi:
+          path: /contact
+          method: post
+
+resources:
+  # DynamoDB
+  - ${file(./yml/DynamoDB.yml)}
