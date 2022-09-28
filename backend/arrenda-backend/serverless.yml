@@ -34,6 +34,12 @@ functions:
       - httpApi:
           path: /contact/{id}
           method: get
+  getAllContacts:
+    handler: src/functions/contacts.getAllContacts
+    events:
+      - httpApi:
+          path: /contacts
+          method: get
 resources:
   # DynamoDB
   - ${file(./yml/DynamoDB.yml)}

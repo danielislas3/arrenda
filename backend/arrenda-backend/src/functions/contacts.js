@@ -47,8 +47,14 @@ const getContact = async (event) => {
     return buildResponse(200, response.Item);
 
   }, (error) => {
-    return buildResponse(500, { message: 'Could not get the contact', error: error })
+    return buildResponse(404, { message: 'Contact Not Found', error: error })
   });
+}
+const getAllContacts = async (event) => {
+  const dynamodb = new AWS.DynamoDB.DocumentClient();
+  const result = await dynamodb.scan({ TableName: TABLE_NAME }).promise();
+  return buildResponse(200, result.Items);
+
 }
 function buildResponse(statusCode, body) {
   return {
@@ -61,5 +67,6 @@ function buildResponse(statusCode, body) {
 }
 module.exports = {
   addContact,
-  getContact
+  getContact,
+  getAllContacts
 }
