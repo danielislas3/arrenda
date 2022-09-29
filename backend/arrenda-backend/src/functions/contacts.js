@@ -44,29 +44,116 @@ const getContact = async (event) => {
     }
   }
   return await dynamodb.get(params).promise().then((response) => {
-    return buildResponse(200, response.Item);
-
+    if (response.Item) {
+      return buildResponse(200, { data: response.Item });
+    } else {
+      return buildResponse(404, { message: 'Contact not found' });
+    }
   }, (error) => {
     return buildResponse(404, { message: 'Contact Not Found', error: error })
   });
 }
 const getAllContacts = async (event) => {
   const dynamodb = new AWS.DynamoDB.DocumentClient();
-  const result = await dynamodb.scan({ TableName: TABLE_NAME }).promise();
-  return buildResponse(200, result.Items);
+  try {
+    const result = await dynamodb.scan({ TableName: TABLE_NAME }).promise();
+    if (result.Items) {
 
+      return buildResponse(200, { length: result.Items.lengt, data: result.Items });
+    } else {
+      return buildResponse(404, { message: 'Contacts not found' });
+
+    }
+  } catch (error) {
+    return buildResponse(404, { message: 'Could not get contacts', error: error });
+  }
+
+}
+const updateContact = async (event) => {
+  const dynamodb = new AWS.DynamoDB.DocumentClient();
+  const { id } = event.pathParameters;
+  const { name, email, phone, addressLines, img } = JSON.parse(event.body);
+
+  // try {
+  //   dynamodb.update({
+  //     TableName: TABLE_NAME,
+  //     Key: { id },
+  //     ConditionExpression: 'attribute_exists(id)',
+  //     UpdateExpression: 'set name = :name, email = :email, phone = :phone, addressLines = :addressLines, img = :img',
+
+  //     ExpressionAttributeValues: {
+  //       ':name': name,
+  //       ':email': email,
+  //       ':phone': phone,
+  //       ':addressLines': addressLines,
+  //       ':img': img
+  //     },
+  //     ReturnValues: 'ALL_NEW'
+  //   }, (error, result) => {
+  //     if (error) {
+  //       return buildResponse(500, { message: 'Could not update contact', error: error });
+  //     }
+  //     return buildResponse(200, { message: 'Contact updated', data: result.Attributes });
+  //   });
+  // } catch (error) {
+  //   return buildResponse(500, { message: 'Could not update contact', error: error });
+  // }
+  try {
+    const result = await dynamodb.update({
+      TableName: TABLE_NAME,
+      Key: { id },
+      UpdateExpression: 'set name = :contactName, email = :email, phone = :phone, addressLines = :addressLines, img = :imagen',
+      ExpressionAttributeNames: {
+        ':phone': phone,
+        ':email': email,
+        ':addressLines': addressLines,
+        ':imagen': imagen,
+        ':contactName': name
+      },
+      ReturnValues: "ALL_NEW"
+    }).promise();
+    result.then((response) => {
+      return buildResponse(200, { message: 'Contact updated', data: response.Attributes });
+    }, (error) => {
+      return buildResponse(500, { message: 'Could not update contact', error: error });
+    });
+
+    return buildResponse(200, { message: 'Contact updated', contact: result });
+
+  } catch (error) {
+    return buildResponse(500, { message: 'Could not update contact', error: error });
+  }
+
+}
+const deleteContact = async (event) => {
+  const dynamodb = new AWS.DynamoDB.DocumentClient();
+  const { id } = event.pathParameters;
+  try {
+    const result = await dynamodb.delete({
+      TableName: TABLE_NAME,
+      Key: { id }
+    }).promise();
+    return buildResponse(200, { message: 'Contact deleted', contact: result });
+  } catch (error) {
+    return buildResponse(500, { message: 'Could not delete contact', error: error });
+  }
 }
 function buildResponse(statusCode, body) {
   return {
     statusCode: statusCode,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
     },
     body: JSON.stringify(body)
   }
 }
+
 module.exports = {
   addContact,
   getContact,
-  getAllContacts
+  getAllContacts,
+  updateContact,
+  deleteContact
 }
