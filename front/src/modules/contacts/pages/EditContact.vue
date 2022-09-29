@@ -72,7 +72,7 @@ export default {
     valid: false,
     nameRules: [
       v => !!v || 'Name is required',
-      v => v.length <= 10 || 'Name must be less than 10 characters',
+      v => v.length <= 25 || 'Name must be less than 25 characters',
     ],
     phoneRules: [
       v => !!v || 'Phone is required',
@@ -87,7 +87,9 @@ export default {
   methods: {
     async getContact() {
       try {
-        this.contact = await userServices.getUser(this.$route.params.contactId)
+        const { data } = await userServices.getUser(this.$route.params.contactId)
+
+        this.contact = data
       } catch (error) {
         console.log(error)
       }
@@ -112,11 +114,12 @@ export default {
     next() {
       this.loading = true
 
-      setTimeout(() => {
-        this.search = ''
-        this.selected = []
-        this.loading = false
-      }, 2000)
+      this.updateContact()
+    },
+    async updateContact() {
+      console.log('updateContact', this.contact);
+      const { data } = await userServices.updateContact(this.contact.id, this.contact)
+      console.log("data", data)
     },
   }
 }

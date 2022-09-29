@@ -49,9 +49,12 @@
             </router-link>
           </v-btn>
           <v-divider class="my-3"></v-divider>
-          <v-btn depressed rounded text>
+          <!-- <v-btn depressed rounded text>
+          
+          </v-btn> -->
+          <v-bottom-sheet inset persistent>
             Delete
-          </v-btn>
+          </v-bottom-sheet>
         </div>
         <v-divider class="my-3"></v-divider>
         <v-list two-line>
@@ -140,7 +143,9 @@ export default {
   methods: {
     async getContact() {
       try {
-        this.contact = await userServices.getUser(this.contactId)
+
+        const { data } = await userServices.getUser(this.contactId)
+        this.contact = data
       } catch (error) {
         console.log(error)
       }

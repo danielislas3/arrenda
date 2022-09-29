@@ -39,7 +39,7 @@ export default {
     //TODO: Arreglar la carga en cache
     async getContatcs() {
       try {
-        const data = await userServices.getContacts();
+        const { data } = await userServices.getContacts();
         this.contacts = data;
       }
       catch (error) {
