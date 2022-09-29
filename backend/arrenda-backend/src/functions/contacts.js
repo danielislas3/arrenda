@@ -1,7 +1,8 @@
 const { v4 } = require("uuid");
 const AWS = require('aws-sdk');
-
 const TABLE_NAME = 'contactTable';
+const buildResponse = require("../helpers/http.js");
+
 const addContact = async (event) => {
   // const data = ;
   const { name, email, phone, addressLines, img } = JSON.parse(event.body)
@@ -69,62 +70,42 @@ const getAllContacts = async (event) => {
   }
 
 }
-const updateContact = async (event) => {
+const updateContact = (event, context, callback) => {
+  const data = JSON.parse(event.body);
+  const params = {
+    TableName: TABLE_NAME,
+    Key: {
+      id: event.pathParameters.id,
+    },
+    ExpressionAttributeNames: {
+      "#name": "name",
+      "#email": "email",
+      "#phone": "phone",
+      "#addressLines": "addressLines",
+      "#img": "img",
+    },
+    ExpressionAttributeValues: {
+      ":name": data.name,
+      ":email": data.email,
+      ":phone": data.phone,
+      ":addressLines": data.addressLines,
+      ":img": data.img,
+    },
+    UpdateExpression:
+      "SET #name = :name, #email = :email, #phone = :phone, #addressLines = :addressLines, #img = :img",
+    ReturnValues: "ALL_NEW",
+  };
   const dynamodb = new AWS.DynamoDB.DocumentClient();
-  const { id } = event.pathParameters;
-  const { name, email, phone, addressLines, img } = JSON.parse(event.body);
-
-  // try {
-  //   dynamodb.update({
-  //     TableName: TABLE_NAME,
-  //     Key: { id },
-  //     ConditionExpression: 'attribute_exists(id)',
-  //     UpdateExpression: 'set name = :name, email = :email, phone = :phone, addressLines = :addressLines, img = :img',
-
-  //     ExpressionAttributeValues: {
-  //       ':name': name,
-  //       ':email': email,
-  //       ':phone': phone,
-  //       ':addressLines': addressLines,
-  //       ':img': img
-  //     },
-  //     ReturnValues: 'ALL_NEW'
-  //   }, (error, result) => {
-  //     if (error) {
-  //       return buildResponse(500, { message: 'Could not update contact', error: error });
-  //     }
-  //     return buildResponse(200, { message: 'Contact updated', data: result.Attributes });
-  //   });
-  // } catch (error) {
-  //   return buildResponse(500, { message: 'Could not update contact', error: error });
-  // }
-  try {
-    const result = await dynamodb.update({
-      TableName: TABLE_NAME,
-      Key: { id },
-      UpdateExpression: 'set name = :contactName, email = :email, phone = :phone, addressLines = :addressLines, img = :imagen',
-      ExpressionAttributeNames: {
-        ':phone': phone,
-        ':email': email,
-        ':addressLines': addressLines,
-        ':imagen': imagen,
-        ':contactName': name
-      },
-      ReturnValues: "ALL_NEW"
-    }).promise();
-    result.then((response) => {
-      return buildResponse(200, { message: 'Contact updated', data: response.Attributes });
-    }, (error) => {
-      return buildResponse(500, { message: 'Could not update contact', error: error });
-    });
-
-    return buildResponse(200, { message: 'Contact updated', contact: result });
-
-  } catch (error) {
-    return buildResponse(500, { message: 'Could not update contact', error: error });
-  }
-
+  dynamodb.update(params, (error, result) => {
+    if (error) {
+      console.error(error);
+      callback(null, buildResponse(500, { message: 'Could not update contact', error: error }));
+      return;
+    }
+    callback(null, buildResponse(200, { data: result.Attributes }));
+  });
 }
+
 const deleteContact = async (event) => {
   const dynamodb = new AWS.DynamoDB.DocumentClient();
   const { id } = event.pathParameters;
@@ -138,17 +119,7 @@ const deleteContact = async (event) => {
     return buildResponse(500, { message: 'Could not delete contact', error: error });
   }
 }
-function buildResponse(statusCode, body) {
-  return {
-    statusCode: statusCode,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-    },
-    body: JSON.stringify(body)
-  }
-}
+
 
 module.exports = {
   addContact,
