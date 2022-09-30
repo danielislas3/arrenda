@@ -15,8 +15,7 @@
 					class="block text-sm py-3 px-4 rounded-lg w-full border outline-none" />
 			</div>
 			<div class="text-center mt-6">
-				<button class="py-3 w-64 text-xl text-white bg-purple-400  hover:bg-purple-700 rounded-2xl">Create
-					Account</button>
+				<button class="py-3 w-64 text-xl text-white bg-purple-400  hover:bg-purple-700 rounded-2xl">Log in</button>
 				<p class="mt-4 text-sm">Don't have an account ? <span class="underline cursor-pointer"
 						@click="$emit('toggleView')">
 						Sign Up</span>
@@ -32,6 +31,8 @@
 </template>
 
 <script>
+import { userServices } from '@/services/Api.js'
+
 export default {
 	name: 'Login',
 	methods: {

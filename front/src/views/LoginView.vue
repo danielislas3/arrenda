@@ -2,6 +2,7 @@
 
 <template>
   <main>
+    
     <Login @toggleView="toogleLogin" v-if="hasAccount" />
     <Singup @toggleView="toogleLogin" v-else />
   </main>

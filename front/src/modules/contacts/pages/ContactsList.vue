@@ -32,14 +32,15 @@ export default {
   name: "ContactsList",
   data() {
     return {
-      contacts: []
+      contacts: [],
+      userId: "fc8b4ed1-22b0-4bfc-a905-053641391fa6"
     };
   },
   methods: {
     //TODO: Arreglar la carga en cache
     async getContatcs() {
       try {
-        const { data } = await userServices.getContacts();
+        const { data } = await userServices.getContacts(this.userId);
         this.contacts = data;
       }
       catch (error) {
