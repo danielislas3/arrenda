@@ -1,11 +1,11 @@
 register:
-  handler: src/functions/auth.register
+  handler: src/auth/register.register
   events:
     - httpApi:
         path: /auth/register
         method: post
 login:
-  handler: src/functions/auth.login
+  handler: src/auth/login.login
   events:
     - httpApi:
         path: /auth/login

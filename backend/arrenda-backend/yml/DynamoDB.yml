@@ -1,8 +1,8 @@
 Resources:
-  ContactsTable:
+  UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: contactTable
+      TableName: userTable
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
@@ -12,16 +12,16 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
-  UserContatcsTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: userTable
-      AttributeDefinitions:
-        - AttributeName: email
-          AttributeType: S
-      KeySchema:
-        - AttributeName: email
-          KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 3
-        WriteCapacityUnits: 3
+  # UsersTable:
+  #   Type: AWS::DynamoDB::Table
+  #   Properties:
+  #     TableName: userTable
+  #     AttributeDefinitions:
+  #       - AttributeName: email
+  #         AttributeType: S
+  #     KeySchema:
+  #       - AttributeName: email
+  #         KeyType: HASH
+  #     ProvisionedThroughput:
+  #       ReadCapacityUnits: 1
+  #       WriteCapacityUnits: 1
