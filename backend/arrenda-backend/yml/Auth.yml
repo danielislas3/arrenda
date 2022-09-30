@@ -1,0 +1,12 @@
+register:
+  handler: src/functions/auth.register
+  events:
+    - httpApi:
+        path: /auth/register
+        method: post
+login:
+  handler: src/functions/auth.login
+  events:
+    - httpApi:
+        path: /auth/login
+        method: post

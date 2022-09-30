@@ -16,42 +16,11 @@ provider:
         - arn:aws:dynamodb:us-west-2:907457643171:table/contactTable
         - arn:aws:dynamodb:us-west-2:907457643171:table/userTable
 functions:
-  hello:
-    handler: src/handler.hello
-    events:
-      - httpApi:
-          path: /
-          method: get
-  createContact:
-    handler: src/functions/contacts.addContact
-    events:
-      - httpApi:
-          path: /contacts
-          method: post
-  getContact:
-    handler: src/functions/contacts.getContact
-    events:
-      - httpApi:
-          path: /contacts/{id}
-          method: get
-  getAllContacts:
-    handler: src/functions/contacts.getAllContacts
-    events:
-      - httpApi:
-          path: /contacts
-          method: get
-  updateContact:
-    handler: src/functions/contacts.updateContact
-    events:
-      - httpApi:
-          path: /contacts/{id}
-          method: put
-  deleteContact:
-    handler: src/functions/contacts.deleteContact
-    events:
-      - httpApi:
-          path: /contacts/{id}
-          method: delete
+  # Contacts
+  - ${file(./yml/Contacts.yml)}
+  # Auth
+  - ${file(./yml/Auth.yml)}
+
 resources:
   # DynamoDB
   - ${file(./yml/DynamoDB.yml)}

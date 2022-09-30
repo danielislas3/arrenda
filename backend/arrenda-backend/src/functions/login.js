@@ -1,4 +1,0 @@
-
-const login = async (user) => {
-
-}

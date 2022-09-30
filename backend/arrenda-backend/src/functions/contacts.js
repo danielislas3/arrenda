@@ -4,7 +4,6 @@ const TABLE_NAME = 'contactTable';
 const buildResponse = require("../helpers/http.js");
 
 const addContact = async (event) => {
-  // const data = ;
   const { name, email, phone, addressLines, img } = JSON.parse(event.body)
   const newContact = {
     id: v4(),
@@ -35,7 +34,6 @@ const addContact = async (event) => {
 }
 const getContact = async (event) => {
   const dynamodb = new AWS.DynamoDB.DocumentClient();
-
   const { id } = event.pathParameters;
 
   const params = {
@@ -44,28 +42,36 @@ const getContact = async (event) => {
       id
     }
   }
-  return await dynamodb.get(params).promise().then((response) => {
-    if (response.Item) {
-      return buildResponse(200, { data: response.Item });
-    } else {
+  try {
+    const result = await dynamodb.get(params).promise();
+    if (!result.Item) {
+      console.log("error:", error)
       return buildResponse(404, { message: 'Contact not found' });
     }
-  }, (error) => {
-    return buildResponse(404, { message: 'Contact Not Found', error: error })
-  });
+    return buildResponse(200, { data: result.Item });
+  } catch (error) {
+    console.log("error:", error)
+    return buildResponse(404, { message: 'Contact Not Found', error: error });
+  }
+
 }
 const getAllContacts = async (event) => {
   const dynamodb = new AWS.DynamoDB.DocumentClient();
   try {
     const result = await dynamodb.scan({ TableName: TABLE_NAME }).promise();
+    console.log("result:", result)
     if (result.Items) {
+      let contactsAlphabetical = [...result.Items].sort((a, b) => a.name < b.name ? -1 : 1);
 
-      return buildResponse(200, { length: result.Items.lengt, data: result.Items });
+      console.log("resultSorted:", result)
+
+      return buildResponse(200, { length: contactsAlphabetical.length, data: contactsAlphabetical });
     } else {
       return buildResponse(404, { message: 'Contacts not found' });
 
     }
   } catch (error) {
+    console.log("error:", error)
     return buildResponse(404, { message: 'Could not get contacts', error: error });
   }
 
@@ -116,7 +122,7 @@ const deleteContact = async (event) => {
     }).promise();
     return buildResponse(200, { message: 'Contact deleted', contact: result });
   } catch (error) {
-    return buildResponse(500, { message: 'Could not delete contact', error: error });
+    return buildResponse(404, { message: 'Could not delete contact', error: error });
   }
 }
 
