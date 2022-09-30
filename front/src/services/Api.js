@@ -13,14 +13,24 @@ const userServices = {
 
   },
 
+  async login(user) {
+    return await fetch(`${BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    })
+  },
+
+
   async getContacts(userId) {
-    var params = { userId: 35.696233, long: 139.570431 } // or:
 
     const response = await fetch(`${BASE_URL}/contacts?userId=${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+
 
         // 'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
@@ -30,8 +40,9 @@ const userServices = {
     return data
   },
 
-  async getUser(id) {
-    const response = await fetch(`${BASE_URL}/contacts/${id}`)
+  async getUser(id, userId = "fc8b4ed1-22b0-4bfc-a905-053641391fa6") {
+    console.log('userrrrr', userId);
+    const response = await fetch(`${BASE_URL}/contacts/${id}?userId=${userId}`)
     const data = await response.json()
     return data
   },

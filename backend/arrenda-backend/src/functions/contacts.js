@@ -104,6 +104,7 @@ const getContact = async (event) => {
 
 }
 const getAllContacts = async (event) => {
+  console.log('event', event);
   const userId = event.queryStringParameters.userId;
   try {
 

@@ -2,6 +2,7 @@ const AWS = require('aws-sdk');
 const bcrypt = require('bcryptjs');
 const buildResponse = require("../helpers/http.js");
 const { v4 } = require("uuid");
+const { getUser } = require('../functions/user.js');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = 'userTable';
@@ -46,20 +47,7 @@ async function register(event) {
   return buildResponse(200, { user: saveUserResponse });
 }
 
-async function getUser(email) {
-  const params = {
-    TableName: TABLE_NAME,
-    Key: {
-      email: email
-    }
-  }
 
-  return await dynamodb.get(params).promise().then(response => {
-    return response.Item;
-  }, error => {
-    console.error('There is an error getting user: ', error);
-  })
-}
 
 async function saveUser(user) {
   const params = {

@@ -41,7 +41,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn :disabled="!valid" :loading="loading" color="purple" text @click="next">
+          <v-btn :disabled="!valid" :loading="loading" color="purple" text @click="updateContact">
             Guardar
           </v-btn>
         </v-card-actions>
@@ -58,6 +58,7 @@ import Categories from '@/modules/contacts/Categories.vue'
 export default {
   name: 'EditContact',
   components: { Categories },
+
   mounted() {
     this.getContact()
     console.log('query', this.$route.params.contactId
@@ -66,7 +67,17 @@ export default {
 
 
   data: () => ({
-    contact: {},
+    contact: {
+      name: '',
+      phone: '',
+      email: '',
+      addressLines: [],
+      img: '',
+      categories: []
+    },
+
+    userId: "fc8b4ed1-22b0-4bfc-a905-053641391fa6",
+
     loading: false,
     file: null,
     valid: false,
@@ -87,9 +98,9 @@ export default {
   methods: {
     async getContact() {
       try {
-        const { data } = await userServices.getUser(this.$route.params.contactId)
-
-        this.contact = data
+        const { data } = await userServices.getUser(this.$route.params.contactId, this.userId)
+        console.log('dataaa', data);
+        this.contact = { ...this.contact, ...data }
       } catch (error) {
         console.log(error)
       }

@@ -45,6 +45,7 @@ export default {
 		return {
 			loading: false,
 			message: '',
+			type: 'warning',
 			alert: false,
 			user: {
 				email: '',
@@ -67,6 +68,7 @@ export default {
 
 					this.alert = true
 					this.message = "Account created successfully"
+					this.type = "success"
 					setTimeout(() => {
 						this.$emit('toggleView')
 					}, 2000);

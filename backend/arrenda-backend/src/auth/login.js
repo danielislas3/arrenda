@@ -1,7 +1,8 @@
 const AWS = require('aws-sdk');
 const buildResponse = require("../helpers/http.js");
-const getUser = require('../functions/user.js');
+// const { getUser } = require('../functions/user.js');
 const auth = require('./auth');
+const TABLE_NAME = 'userTable';
 
 const bcrypt = require('bcryptjs');
 
@@ -15,6 +16,7 @@ const login = async (event) => {
     })
   }
   const dynamoUser = await getUser(email.toLowerCase().trim());
+  console.log('User', dynamoUser);
 
   if (!dynamoUser || !dynamoUser.email) {
     return buildResponse(403, { message: 'user does not exist' });
@@ -36,7 +38,20 @@ const login = async (event) => {
   return buildResponse(200, response);
 }
 
+async function getUser(email) {
+  const params = {
+    TableName: TABLE_NAME,
+    Key: {
+      email: email
+    }
+  }
 
+  return await dynamodb.get(params).promise().then(response => {
+    return response.Item;
+  }, error => {
+    console.error('There is an error getting user: ', error);
+  })
+}
 module.exports = {
   login
 }
